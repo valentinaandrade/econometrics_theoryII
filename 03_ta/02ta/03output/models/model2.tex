@@ -1,0 +1,23 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{7}{c}}
+\toprule
+                    &          m2         &                     &                     &         m21         &                     &                     &                     \\
+                    &municipalPIE         &subvencionadonoPIE         &subvencionadoPIE         &   cod\_nivel         &  1.es\_mujer         &1.prioritario         &1.alto\_rendimiento         \\
+                    &           b         &           b         &           b         &           b         &           b         &           b         &           b         \\
+\midrule
+cod\_nivel           &      -0.016         &       0.096         &      -0.151\sym{**} &                     &                     &                     &                     \\
+es\_mujer=1          &       0.382         &       1.297\sym{***}&       0.101         &                     &                     &                     &                     \\
+prioritario=1       &      -0.011         &       0.527         &       0.969\sym{**} &                     &                     &                     &                     \\
+alto\_rendimiento=1  &       0.106         &      -0.249         &       0.505         &                     &                     &                     &                     \\
+1.\_predict          &                     &                     &                     &       0.004         &      -0.098         &      -0.066         &      -0.021         \\
+2.\_predict          &                     &                     &                     &      -0.000         &      -0.006         &      -0.110\sym{*}  &       0.008         \\
+3.\_predict          &                     &                     &                     &       0.021         &       0.159\sym{***}&       0.047         &      -0.063         \\
+4.\_predict          &                     &                     &                     &      -0.024\sym{***}&      -0.054         &       0.129\sym{**} &       0.076         \\
+Constant            &       0.325         &      -1.865\sym{*}  &       0.153         &                     &                     &                     &                     \\
+\midrule
+Observations        &         222         &                     &                     &         222         &                     &                     &                     \\
+Pseudo \(R^{2}\)    &     .042493         &                     &                     &                     &                     &                     &                     \\
+\bottomrule
+\end{tabular}
+}

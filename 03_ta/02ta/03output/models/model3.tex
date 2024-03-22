@@ -1,0 +1,34 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{5}{c}}
+\toprule
+                    &          m3         &         m31         &                     &                     &                     \\
+                    & type\_school         &   distancia         &p\_prioritario         &Puntaje promedio del establecimiento en Lectura         &Puntaje promedio del establecimiento en Matemática         \\
+                    &           b         &           b         &           b         &           b         &           b         \\
+\midrule
+distancia           &      -0.043\sym{*}  &                     &                     &                     &                     \\
+p\_prioritario       &       3.652\sym{***}&                     &                     &                     &                     \\
+Puntaje promedio del establecimiento en Lectura&      -0.015\sym{***}&                     &                     &                     &                     \\
+Puntaje promedio del establecimiento en Matemática&       0.015\sym{***}&                     &                     &                     &                     \\
+1.\_outcome $\times$ type\_school=1&                     &      -0.008\sym{*}  &       0.677\sym{***}&      -0.003\sym{***}&       0.003\sym{***}\\
+1.\_outcome $\times$ type\_school=2&                     &       0.003\sym{**} &      -0.243\sym{**} &       0.001\sym{***}&      -0.001\sym{***}\\
+1.\_outcome $\times$ type\_school=3&                     &       0.003\sym{*}  &      -0.231\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+1.\_outcome $\times$ type\_school=4&                     &       0.002\sym{**} &      -0.205\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+2.\_outcome $\times$ type\_school=1&                     &       0.003\sym{**} &      -0.242\sym{**} &       0.001\sym{***}&      -0.001\sym{***}\\
+2.\_outcome $\times$ type\_school=2&                     &      -0.008\sym{**} &       0.682\sym{**} &      -0.003\sym{***}&       0.003\sym{***}\\
+2.\_outcome $\times$ type\_school=3&                     &       0.003\sym{**} &      -0.230\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+2.\_outcome $\times$ type\_school=4&                     &       0.002\sym{**} &      -0.207\sym{**} &       0.001\sym{***}&      -0.001\sym{***}\\
+3.\_outcome $\times$ type\_school=1&                     &       0.003\sym{*}  &      -0.230\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+3.\_outcome $\times$ type\_school=2&                     &       0.003\sym{*}  &      -0.231\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+3.\_outcome $\times$ type\_school=3&                     &      -0.008\sym{*}  &       0.653\sym{***}&      -0.003\sym{***}&       0.003\sym{***}\\
+3.\_outcome $\times$ type\_school=4&                     &       0.002\sym{**} &      -0.193\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+4.\_outcome $\times$ type\_school=1&                     &       0.002\sym{**} &      -0.204\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+4.\_outcome $\times$ type\_school=2&                     &       0.002\sym{**} &      -0.208\sym{**} &       0.001\sym{***}&      -0.001\sym{***}\\
+4.\_outcome $\times$ type\_school=3&                     &       0.002\sym{**} &      -0.192\sym{***}&       0.001\sym{***}&      -0.001\sym{***}\\
+4.\_outcome $\times$ type\_school=4&                     &      -0.007\sym{**} &       0.604\sym{***}&      -0.003\sym{***}&       0.002\sym{***}\\
+\midrule
+Observations        &         888         &         888         &                     &                     &                     \\
+Pseudo \(R^{2}\)    &                     &                     &                     &                     &                     \\
+\bottomrule
+\end{tabular}
+}
