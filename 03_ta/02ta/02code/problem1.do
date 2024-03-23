@@ -37,11 +37,11 @@ qui eststo m1: logit municipal cod_nivel i.es_mujer i.prioritario i.alto_rendimi
 
 
 * 2. Marginals (in probability) atmeans PEA
-qui eststo m11: margins, dydx (od_nivel i.es_mujer i.prioritario i.alto_rendimiento) atmeans post
+qui eststo m11: margins, dydx (cod_nivel i.es_mujer i.prioritario i.alto_rendimiento) atmeans post
 
 * 3. Marginals (in probability) atmeans APE
 estimate restore m1
-qui eststo m12: margins, dydx (od_nivel i.es_mujer i.prioritario i.alto_rendimiento) post
+qui eststo m12: margins, dydx (cod_nivel i.es_mujer i.prioritario i.alto_rendimiento) post
 
 
 * 4. Save logit and margins
