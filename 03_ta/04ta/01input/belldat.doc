@@ -1,0 +1,37 @@
+Variable Definitions for bell_men.dat, bell_women.dat, bell_all.dat
+-------------------------------------------------------------------
+
+     ID        id number of the individual
+     WEIGHT    population weight
+     WAGES     individual's total salary and wages in 1989 (1990$)
+     WEEKS     weeks worked in 1989
+     RACE      1 if black; 0 if white (non-hispanic, non-asian)
+     EDUC      1 = HS dropout;2 = HS Grad; 3 = Some College; 4 = College Grad
+     AGE       age in 1990
+     SES       standardized index of socio-economic background 
+     FAMINC    family's total salary and wages in 1989 (1990$)
+     EVERWED   1 = the individual was ever married; 0 = never married
+     IMMIG     1 = born outside of US; 0 = born in US
+     PARENT14  1 = individual lived with either biologial parent at age 14;
+	       0 = lived with neither biological parent at age 14 	 
+     BOTH14    1 = individual lived with both biologial parents at age 14;
+	       0 = did not live with both biological parents at age 14 	 
+     SEX       1 = male; 2 = female     
+     AFQT      standardized, age-equated AFQT score
+     MARRIED   1 = married in 1990; 0 = not married in 1990
+     POVERTY   1 = family was below poverty line in 1989; 0 = otherwise
+     OUTOFLF   1 = out of labor force (and not in school) 
+		   for at least 4 weeks in 1989
+	       0 = otherwise
+
+
+Note: all samples exclude students, asians, hispanics, and individuals who had 
+missing data on wages, weeks, education, age, SES, marital status, 
+immigrant status, parental status, gender, or AFQT score.
+
+bell_men.dat has data only on men.
+bell_women.dat has data only on women.
+bell_all.dat has data only on both men and women.
+
+
+
