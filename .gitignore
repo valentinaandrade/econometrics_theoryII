@@ -1,3 +1,8 @@
 
 .DS_Store
 .Rproj.user
+03_ta/02ta/base2.dta
+03_ta/02ta/help.R
+03_ta/02ta/help2.R
+*.do
+*.dta
