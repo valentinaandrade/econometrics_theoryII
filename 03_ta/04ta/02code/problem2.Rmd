@@ -1,9 +1,9 @@
 ---
-title: "Problem Set N°2"
-author: "Valentina Andrade"
-abstract: "The following report contains the exercises requested in problem set 2. In the first part you can download exercise solutions. In the second part, we study the Dornbush's exchange rate overshooting hypothesis. Dornbusch's overshooting hypothesis (1976) is an important tool for analyzing *exchange rate and monetary policy dynamic*. This report suggest a identification strategy (with VAR approach) that deals with simultaneity and long-run effects (neutrality assumption). Although previous research did not find clear effects (probably due to simultaneity biases), we found that a monetary policy shock has a strong and immediate effect on the exchange rate. Then,  exchange rate gradually depreciates back to the baseline. In conclusion, the results are **consistent with the overshooting hypothesis**'"
+title: "Heckman Selection"
+author: "Ayudantes: Valentina Andrade y Nicolás Valle"
+abstract: ""
 
-date: October 03, 2022
+date: "Abril 12, 2024"
 output:
   prettydoc::html_pretty:
     theme: tactile
@@ -14,16 +14,10 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning =  F, message = F)
+pacman::p_load(kableExtra, tidyverse, sampleSelection)
+theme_set(theme_classic())
 ```
-
-# Heckman Selection 
-
-This demonstration of the Heckman selection model is based on Bleven's example
-[here](https://www3.nd.edu/~wevans1/ecoe60303/sample_selection_example.ppt), but
-which is more or less the 'classic' example regarding women's wages, variations
-of which you'll find all over.
-
 
 ## Data Setup
 
@@ -41,8 +35,6 @@ Generate missing data for wearnl drawn z from standard normal [0,1].  z is actua
 - wearnl_all = wearnl with non-missing obs
 
 ```{r heckman-setup}
-library(tidyverse)
-
 set.seed(123456)
 
 N = 10000
@@ -131,8 +123,6 @@ summary(lm_select)
 Compare to <span class="pack" style = "">sampleSelection</span> package.
 
 ```{r heckman-compare-1}
-library(sampleSelection)
-
 selection_2step = selection(observed_index ~ educ + age + z, wearnl ~ educ + age, 
                             method = '2step')
 
@@ -200,20 +190,6 @@ fit_unbounded = optim(
   control = list(maxit = 1000, reltol = 1e-15),
   hessian = T
 )
-
-fit_bounded = optim(
-  init,
-  select_ll,
-  X = X[, -4],
-  Z = Z,
-  y = wearnl[observed_index],
-  observed_index = observed_index,
-  method  = 'L-BFGS',
-  lower   = c(rep(-Inf, 7), 1e-10,-1),
-  upper   = c(rep(Inf, 8), 1),
-  control = list(maxit = 1000, factr = 1e-15),
-  hessian = T
-)
 ```
 
 ### Comparison
@@ -229,15 +205,12 @@ selection_ml = selection(observed_index ~ educ + age + z, wearnl ~ educ + age,
 We now compare the results of the different estimation approaches.
 
 ```{r heckman-compare, echo=FALSE}
-library(tidyverse)
-
 # compare coefficients
 tibble(
   model = rep(c('probit', 'lm', 'both'), c(4, 4, 1)),
   par   = names(coef(selection_ml)),
   sampselpack_ml = coef(selection_ml),
   unbounded_ml   = fit_unbounded$par,
-  bounded_ml     = fit_bounded$par,
   explicit_twostep = c(
     coef(probit),
     coef(lm_select)[1:3],
@@ -257,9 +230,6 @@ tibble(
   ))),
   unbounded_ml = sqrt(diag(solve(
     fit_unbounded$hessian
-  ))),
-  bounded_ml = sqrt(diag(solve(
-    fit_bounded$hessian
   ))),
   explicit_twostep = c(
     summary(probit)$coefficients[, 2],
