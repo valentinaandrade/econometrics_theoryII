@@ -1,6 +1,6 @@
 ---
 title: "Ayudantía 4. Selection models - Heckman"
-author: "Profesor: Tomás Rau Ayudantes: Valentina Andrade y Nicolás Valle"
+author: "Profesor: Tomás Rau.     Ayudantes: Valentina Andrade y Nicolás Valle"
 abstract: "En este ejercicio simularemos datos de modo que conoceremos el GDP, y cómo están seleccionados los datos. Lo que hacemos es verificar cómo afecta la selección a la estimación, y como la propuesta de **Heckman** permite lidiar con este problema. "
 
 date: "12 de abril de 2024"
