@@ -1,0 +1,109 @@
+# Part 1: Concepts
+
+El survival analysis o **duration model** es un análisis de tiempo hasta la ocurrencia de un evento.
+
+El término análisis de supervivencia se utiliza predominantemente en ciencias biomédicas donde el interés radica en observar el tiempo hasta la muerte, ya sea de pacientes o de animales de laboratorio. El análisis de tiempo hasta un evento también se ha utilizado ampliamente en ciencias sociales donde el interés está en analizar el tiempo hasta eventos como cambios de empleo, matrimonio, nacimiento de hijos, etc. Las ciencias de la ingeniería también han contribuido al desarrollo del análisis de supervivencia, que se llama "análisis de confiabilidad" o "análisis de tiempo de falla" en este campo, ya que el enfoque principal está en modelar el tiempo que lleva a las máquinas o componentes electrónicos a fallar. Los desarrollos de estos diversos campos se han consolidado en su mayor parte en el campo del "análisis de supervivencia".
+
+- **Dificultades en el Análisis de Datos de Supervivencia**
+
+  - Hay ciertos aspectos de los datos de análisis de supervivencia, como la censura y la no normalidad, que generan grandes dificultades al tratar de analizar los datos utilizando modelos estadísticos tradicionales como la regresión lineal múltiple. El aspecto de no normalidad de los datos viola la suposición de normalidad de la mayoría de los modelos estadísticos comúnmente utilizados, como la regresión o el ANOVA, etc. 
+  
+  - Una observación censurada se define como una observación con información incompleta. Hay cuatro tipos diferentes de censura posibles: truncamiento derecho, truncamiento izquierdo, censura derecha y censura izquierda. Nos centraremos exclusivamente en la censura derecha por varias razones. La mayoría de los datos utilizados en los análisis tienen solo censura derecha. Además, la censura derecha es la más fácil de entender de los cuatro tipos de censura y si un investigador puede entender el concepto de censura derecha a fondo, se vuelve mucho más fácil entender los otros tres tipos. Cuando una observación está censurada a la derecha, significa que la información es incompleta porque el sujeto no tuvo un evento durante el tiempo que el sujeto formó parte del estudio.
+  
+  - El punto del análisis de supervivencia es seguir a los sujetos a lo largo del tiempo y observar en qué momento experimentan el evento de interés. A menudo sucede que el estudio no abarca suficiente tiempo para observar el evento para todos los sujetos en el estudio. Esto podría deberse a varias razones. Tal vez los sujetos abandonen el estudio por razones no relacionadas con el estudio (es decir, pacientes que se mudan a otra área y no dejan una dirección de contacto). La característica común de todos estos ejemplos es que si el sujeto hubiera podido permanecer en el estudio, entonces hubiera sido posible observar eventualmente el tiempo del evento.
+  
+- **Diferencia entre Tiempo de Calendario y Tiempo en el Estudio**
+
+  - Es importante entender la diferencia entre el tiempo de calendario y el tiempo en el estudio. Es muy común que los sujetos ingresen al estudio de manera continua a lo largo de la duración del estudio. Esta situación se refleja en el primer gráfico donde podemos ver la entrada escalonada de cuatro sujetos. Los puntos rojos denotan intervalos en los que el evento está censurado, mientras que los intervalos sin puntos rojos indican que el evento ocurrió. Parecería que el sujeto 4 abandonó el estudio después de poco tiempo (atropellado por un autobús, muy trágico) y que el sujeto 3 no experimentó un evento para cuando terminó el estudio, pero si el estudio hubiera continuado más tiempo (con más financiamiento), habríamos conocido el tiempo en que este sujeto habría experimentado un evento.
+  
+  IMAGEN 1
+  
+  
+- **La Tasa de Peligro en el Análisis de Supervivencia**
+  - Otro concepto importante en el análisis de supervivencia es la tasa de peligro. Al observar datos con tiempo discreto (tiempo medido en intervalos grandes como meses, años o incluso décadas), podemos tener una idea intuitiva de la tasa de peligro. Para el tiempo discreto, la tasa de peligro es la probabilidad de que un individuo experimente un evento en el tiempo "t" mientras ese individuo está en riesgo de tener un evento. Por lo tanto, la tasa de peligro es realmente la tasa no observada a la que ocurren los eventos. Si la tasa de peligro es constante en el tiempo y fuera igual a 1.5, por ejemplo, esto significaría que se esperaría que ocurrieran 1.5 eventos en un intervalo de tiempo de una unidad de longitud. Además, si una persona tuviera una tasa de peligro de 1.2 en el tiempo "t" y una segunda persona tuviera una tasa de peligro de 2.4 en el tiempo "t", entonces sería correcto decir que el riesgo de un evento de la segunda persona sería dos veces mayor en el tiempo "t". Es importante darse cuenta de que la tasa de peligro es una variable no observada, pero controla tanto la ocurrencia como el momento de los eventos. Es la variable dependiente fundamental en el análisis de supervivencia.
+  
+- **Forma y Influencia de la Función de Peligro**
+
+  - Otro aspecto importante de la función de peligro es comprender cómo la forma de la función de peligro influirá en otras variables de interés, como la función de supervivencia. El primer gráfico a continuación ilustra una función de peligro con forma de "bañera". Este gráfico está representando la función de peligro para la supervivencia de pacientes con trasplante de órganos. En el tiempo igual a cero están teniendo el trasplante y dado que esta es una operación muy peligrosa, tienen un peligro muy alto (una gran probabilidad de morir). Los primeros 10 días después de la operación también son muy peligrosos, con una alta probabilidad de que el paciente muera, pero el peligro es menor que durante la operación real y, por lo tanto, el peligro disminuye durante este período. Si el paciente ha sobrevivido más allá del día 10, entonces están en muy buena forma y tienen muy pocas posibilidades de morir en los siguientes 6 meses. Después de 6 meses, los pacientes comienzan a experimentar deterioro y las posibilidades de morir aumentan nuevamente, por lo tanto, la función de peligro comienza a aumentar. Después de un año, casi todos los pacientes están muertos y, por lo tanto, la función de peligro muy alta que seguirá aumentando.
+  
+- **Importancia de Modelar la Tasa de Peligro**
+
+  - La función de peligro puede no parecer una variable emocionante para modelar, pero otros indicadores de interés, como la función de supervivencia, se derivan de la tasa de peligro. Una vez que hemos modelado la tasa de peligro, podemos obtener fácilmente estas otras funciones de interés. En resumen, es importante entender el concepto de la función de peligro y comprender la forma de la función de peligro. 
+
+*Un ejemplo de una función de peligro para pacientes con trasplante de corazón.*
+
+IMAGEN 2
+
+
+# Empirical exercise
+
+## Set up
+
+- **Datos UIS**
+  - El objetivo de los **datos UIS** es modelar el tiempo hasta el retorno al consumo de drogas para pacientes inscritos en dos programas de tratamiento residencial diferentes que difieren en duración (*treat=0* es el programa corto y *treat=1* es el programa largo). Los pacientes fueron asignados aleatoriamente a dos sitios diferentes (*site=0* es el sitio A y *site=1* es el sitio B). La variable *age* indica la edad al momento de la inscripción, *herco* indica el uso de heroína o cocaína en los últimos tres meses (*herco=1* indica uso de heroína y cocaína, *herco=2* indica uso de heroína o cocaína, y *herco=3* indica que no se consumió heroína ni cocaína), y *ndrugtx* indica el número de tratamientos previos para la drogadicción. Las variables *time* contienen el tiempo hasta el retorno al consumo de drogas, y la variable *censor* indica si el sujeto regresó al consumo de drogas (*censor=1* indica retorno al consumo de drogas y *censor=0* de lo contrario).
+  
+- **Visualización de las primeras 10 observaciones del conjunto de datos UIS**
+
+  - Veamos las primeras 10 observaciones del conjunto de datos UIS. Tenga en cuenta que el sujeto 5 está censurado y no experimentó un evento mientras estuvo en el estudio. También tenga en cuenta que la codificación para *censor* es bastante contraintuitiva, ya que el valor 1 indica un evento y 0 indica censura. Quizás sería más apropiado llamar a esta variable "evento".
+  
+  
+## Explore data
+
+- **Análisis Univariado en Análisis de Supervivencia**
+
+  - En cualquier análisis de datos, siempre es una gran idea realizar un análisis univariado antes de proceder a modelos más complicados. En el análisis de supervivencia, es muy recomendable observar las curvas de Kaplan-Meier para todos los predictores categóricos. Esto proporcionará información sobre la forma de la función de supervivencia para cada grupo y dará una idea de si los grupos son proporcionales (es decir, las funciones de supervivencia son aproximadamente paralelas). También consideramos las pruebas de igualdad entre estratos para explorar si incluir o no el predictor en el modelo final. Para las variables categóricas, utilizaremos la prueba de log-rank de igualdad entre estratos, que es una prueba no paramétrica. Para las variables continuas, utilizaremos una regresión de riesgos proporcionales de Cox univariada, que es un modelo semiparamétrico. Consideraremos incluir el predictor si la prueba tiene un valor p de 0.2 a 0.25 o menos. Estamos utilizando este esquema de eliminación porque todos los predictores en el conjunto de datos son variables que podrían ser relevantes para el modelo. Si el predictor tiene un valor p mayor que 0.25 en un análisis univariado, es muy poco probable que contribuya algo a un modelo que incluya otros predictores.
+  
+- **Prueba de Log-Rank para el predictor _treat_**
+  - La prueba de log-rank de igualdad entre estratos para el predictor *treat* tiene un valor p de 0.0091, por lo tanto, *treat* será incluido como un candidato potencial para el modelo final. A partir del gráfico, vemos que la función de supervivencia para cada grupo de *treat* no son perfectamente paralelas, pero se separan excepto al principio y al final. La superposición al final no debería causar demasiada preocupación porque está determinada por solo unos pocos sujetos censurados de una muestra de 628 sujetos. En general, la prueba de log-rank coloca más énfasis en las diferencias en las curvas en valores de tiempo más grandes. Es por eso que obtenemos un valor p tan pequeño incluso si las dos curvas de supervivencia parecen estar muy cerca una de la otra para tiempos inferiores a 100 días.
+  
+
+**Paralelas**
+
+En el método de Kaplan-Meier, las curvas no se superponen completamente debido a la naturaleza del análisis de supervivencia.
+
+Las curvas de Kaplan-Meier muestran la proporción de sujetos que aún no han experimentado el evento de interés en función del tiempo. En cualquier punto dado en el tiempo, la curva representa la proporción de sujetos que aún están "vivos" o sin experimentar el evento.
+
+Si las curvas de dos grupos diferentes están completamente superpuestas, significaría que las tasas de supervivencia en ambos grupos son exactamente iguales en todos los puntos en el tiempo, lo cual es poco común en la práctica. En la mayoría de los casos, habrá al menos algunas diferencias en las tasas de supervivencia entre los grupos en algún momento del estudio.
+
+Por lo tanto, incluso si las curvas son muy similares y parecen casi superpuestas, es probable que haya alguna diferencia sutil en las tasas de supervivencia entre los grupos, lo que se refleja en la ligera separación de las curvas en el gráfico.
+  
+## **Modelo**
+  - Para nuestro proceso de construcción del modelo, primero consideraremos el modelo que incluirá todos los predictores que tuvieron un valor p de menos de 0.2 – 0.25 en los análisis univariados, lo que en este análisis particular significa que incluiremos cada predictor en nuestro modelo. El predictor categórico *herco* tiene tres niveles y, por lo tanto, incluiremos este predictor usando variables ficticias con el grupo *herco=1* como grupo de referencia. Podemos crear estas variables ficticias sobre la marcha utilizando el comando *xi* con *stcox*.
+  
+- **Interacciones**
+  - A continuación, debemos considerar las interacciones. No tenemos ningún conocimiento previo de interacciones específicas que debamos incluir, por lo que consideraremos todas las posibles interacciones. Dado que nuestro modelo es bastante pequeño, esto es manejable, pero la situación ideal es cuando toda la construcción del modelo, incluidas las interacciones, se basa en la teoría.
+
+- **El Modelo Final que Incluye Interacciones**
+  - Ahora podemos ver por qué fue importante incluir *site* en nuestro modelo, como sugirió la investigación previa, porque resulta que *site* está involucrado en la única interacción significativa en el modelo. Podemos comparar el modelo con la interacción con el modelo sin la interacción utilizando el comando *lrtest* ya que los modelos están anidados. La prueba *lrtest* significativa indica que rechazamos la hipótesis nula de que los dos modelos ajustan igual de bien los datos y concluimos que el modelo más grande con la interacción ajusta mejor los datos que el modelo más pequeño que no incluía la interacción.
+
+## **Mirando las hazard rate**
+  - Al observar los cocientes de peligro (también llamados riesgos relativos), el modelo indica que a medida que el número de tratamientos de drogas previos (*ndrugtx*) aumenta en una unidad, y todas las demás variables se mantienen constantes, la tasa de recaída aumenta en un 3.7%. Si la duración del tratamiento se modifica de corta a larga, mientras se mantienen constantes todas las demás variables, la tasa de recaída disminuye en (100% – 76.5%) = 23.5%. A medida que el tratamiento se traslada del sitio A al sitio B y la edad es igual a cero, y todas las demás variables se mantienen constantes, la tasa de recaída disminuye en (100% – 28.8%) = 71.2%. Estos resultados se basan en la salida utilizando los cocientes de peligro. Para discutir las variables que están involucradas en un término de interacción, como la edad y el sitio en nuestro modelo, necesitamos usar los coeficientes crudos y aquí se enumeran solo por conveniencia.
+
+- **Comparación de 2 sujetos dentro del sitio A (sitio=0)**
+  - Un aumento en la edad de 5 años mientras todas las demás variables se mantienen constantes produce un cociente de peligro igual a exp(-0.03369*5) = .84497351. Por lo tanto, la tasa de recaída disminuye en (100% – 84.5%) = 15.5% con un aumento de 5 años en la edad.
+
+- **Comparación de 2 sujetos dentro del sitio B (sitio=1)**
+  - Un aumento en la edad de 5 años mientras se mantienen constantes todas las demás variables produce un cociente de peligro igual a exp(-0.03369*5 + 0.03377*5) = 1.0004. Por lo tanto, la tasa de recaída se mantiene bastante estable para los sujetos en el sitio B ya que 1.0004 está muy cerca de 1.
+  
+  
+##  **Proportional assumption**
+
+  - Uno de los principales supuestos del modelo de riesgo proporcional de Cox es la proporcionalidad. Hay varios métodos para verificar que un modelo cumple con la suposición de proporcionalidad. Verificaremos la proporcionalidad incluyendo covariables dependientes del tiempo en el modelo utilizando las opciones *tvc* y *texp* en el comando *stcox*. Las covariables dependientes del tiempo son interacciones de los predictores y el tiempo. En este análisis elegimos usar las interacciones con log(tiempo) porque esta es la función más común de tiempo utilizada en covariables dependientes del tiempo, pero se podría usar cualquier función de tiempo. Si una covariable dependiente del tiempo es significativa, esto indica una violación de la suposición de proporcionalidad para ese predictor específico.
+
+  - La conclusión es que ninguna de las variables dependientes del tiempo es significativa ni colectiva ni individualmente, lo que respalda la suposición de riesgo proporcional.
+
+  - Otro método para probar la suposición de proporcionalidad es utilizando los residuos de Schoenfeld y los residuos escalados de Schoenfeld, que primero deben guardarse a través del comando *stcox*. En el comando *stphtest* probamos la proporcionalidad del modelo en su conjunto y utilizando la opción *detail* obtenemos una prueba de proporcionalidad para cada predictor. Usando la opción *plot* también podemos obtener un gráfico de la suposición de Schoenfeld escalada. Si las pruebas en la tabla no son significativas (valores p mayores a 0.05) entonces no podemos rechazar la proporcionalidad y asumimos que no tenemos una violación de la suposición proporcional. Una línea horizontal en los gráficos es una indicación adicional de que no hay violación de la suposición de proporcionalidad. El comando *stphplot* utiliza gráficos log-log para probar la proporcionalidad y si las líneas en estos gráficos son paralelas entonces tenemos una indicación adicional de que los predictores no violan la suposición de proporcionalidad.
+
+  - El predictor *treat* podría requerir un examen más cercano ya que tiene una prueba significativa y la curva en el gráfico no es completamente horizontal. El gráfico del comando *stphplot* no tiene curvas completamente paralelas. Sin embargo, elegimos dejar *treat* en el modelo sin cambios basándonos en la investigación previa.
+
+- **Solución**
+
+  - Si uno de los predictores no fuera proporcional, hay varias soluciones que considerar. Una solución es incluir la variable dependiente del tiempo para los predictores no proporcionales. Otra solución es estratificar en el predictor no proporcional. El siguiente es un ejemplo de estratificación en el predictor *treat*. Tenga en cuenta que *treat* ya no se incluye en la declaración del modelo, en su lugar se especifica en la declaración de *strata*.
+
+## **Survival functions**
+
+  - Cada patrón de covariables tendrá una función de supervivencia diferente. La función de supervivencia predeterminada es para el patrón de covariables donde cada predictor se establece en cero. Sin embargo, para muchos predictores, este valor no es significativo porque este valor cae fuera de los datos, como edad=0. Sería mucho más útil especificar un patrón de covariables exacto y generar una función de supervivencia para los sujetos con ese patrón de covariables específico.
+
+  - En el siguiente ejemplo, queremos graficar la función de supervivencia para un sujeto que tiene 30 años de edad (*age=30*), ha tenido 5 tratamientos previos para drogas (*ndrugtx=5*) y actualmente está recibiendo el tratamiento largo (*treat=1*) en el sitio A (*site=0* y *agesite=30$\times$ = 0*). Primero obtenemos la función de supervivencia base para el patrón de covariables donde todos los predictores se establecen en cero. Luego elevamos la función de supervivencia base a la exponencial de la combinación lineal de los coeficientes y los valores de las covariables en el patrón de covariables de interés. Por lo tanto, en esta instancia particular, la combinación lineal sería: *-0.0336943*30 + 0.0364537*5 – 0.2674113*1 – 1.245928*0 – .0337728*0*.
+
+  - Mirar la función de supervivencia para un patrón de covariables a veces no es suficiente. A menudo es muy útil tener un gráfico donde podamos comparar las funciones de supervivencia de diferentes grupos. En el siguiente ejemplo, generamos un gráfico con las funciones de supervivencia para los dos grupos de tratamiento donde todos los sujetos tienen 30 años de edad (*age=30*), han tenido 5 tratamientos previos para drogas (*ndrugtx=5*) y actualmente están siendo tratados en el sitio A (*site=0* y *agesite=300=0*). Por lo tanto, los dos patrones de covariables difieren solo en sus valores para *treat*.

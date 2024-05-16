@@ -23,7 +23,7 @@ global output   "$github/03output"
 
 use "/Users/valentinaandrade/Downloads/uis.dta", clear
 
- *Specify time of censoring or failure, tvar, and specify that event = 2 represents a failure
+*Specify time of censoring or failure, tvar, and specify that event  represents a failure
 stset time, failure(censor)
 
 * ------------------------------------------------------
