@@ -1,0 +1,206 @@
+%Ayudantía 6 Metrix II NIne von Dessauer
+\documentclass[11pt]{article}
+\usepackage[letterpaper, margin=1.8 cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amstext}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Instituto de Economía UC}
+\rhead{Teoría Econométrica II}
+\rfoot{\thepage}
+
+\title{\textbf{Ayudantía 7 \\ \normalsize Teoría Econométrica II}}
+\author{Profesor: Tomás Rau \\ Ayudantes: Valentina Andrade y Nicolás Valle}
+\date{23 de Mayo, 2024}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+ 
+\section{Datos de Panel: Ejercicio Empírico}
+
+Para este ejercicio utilizaremos los datos de Baltagi y Khanti-Akom (1990) y Cornwell y Rupert (1988) quienes utilizando un panel estiman los retornos a la educación, a modo de ejemplo en su discusión de estimadores eficientes para datos de panel. \\
+
+Los datos provienen de la PSID (Panel Study of Income Dynamics) entre los años 1976 - 1982 y contienen observaciones de 595 jefes de hogar que trabajan y que tienen entre 18 y 65 años de edad en 1976. Los datos \textit{ta07.dta} contiene para cada individuo y para cada año información del salario y características como: años de educación (ed), años de experiencia (exp), entre otras. Utilizaremos estos datos para aprender a trabajar con datos de panel en Stata. \\
+ 
+\textit{Disclaimer}: Lo primero que debemos hacer para trabajar en Stata es declarar los datos como un panel, especificando
+
+\begin{itemize}
+\item \textbf{Cuál es la unidad que se sigue a lo largo del tiempo} (individuos, familias, firmas, escuelas, ciudades, países)
+\item  \textbf{El tiempo} (horas, días, meses)
+\end{itemize}
+
+ ¿Qué tipo de panel es este? \\
+
+\textbf{Respuesta:} Este panel es un panel individual (i.e., la unidad que se sigue a lo largo del tiempo son individuos). Al declarar la base como panel, Stata nos indica de inmediato si el panel está balanceado o no (dice ``strongly o weakly balanced''). 
+
+\subsection{Análisis descriptivo}
+
+Utilice el comando \textit{xtsum} para analizar los principales estadísticos descriptivos. Note que la variación total puede descomponerse en \textit{within} (\textit{intra-grupos}) y \textit{between} (\textit{intra-grupos}):
+
+	\begin{itemize}
+	\item Variación Overall: $s_O^2=\dfrac{1}{NT-1}\sum_i\sum_t(x_{it}-\overline{x})^2$
+	\item Variación Within: $s_W^2=\dfrac{1}{NT-1}\sum_i\sum_t(x_{it}-\overline{x_i})^2$
+	\item Variación Between: $s_B^2=\dfrac{1}{N-1}\sum_i(\overline{x_i}-\overline{x})^2$
+	\end{itemize}
+	
+	
+Estudiarlas nos da información acerca del tipo de modelo que podríamos utilizar ¿por qué?. \\
+
+\textbf{Respuesta:} Una mayor diferencia between nos dice que la mayor varianza existe entre unidades de observación (individuos, en este caso) y no intra individuos (en el tiempo), lo que nos sugiere RE (Random Effects)\\
+
+\subsections{Estimación y tests}
+Recuerde que el modelo se escribe como:
+
+$$y_{it}=x_{it}\beta+u_{it}$$
+
+con $i=1,\ldots,N$; $t=1,\ldots,T$ y $\beta$ un vector de tamaño $K+1$.
+
+\begin{enumerate} 
+\item Explique brevemente los modelos \textit{one-way-error} y \textit{two-way-error}, además de la diferencia entre un modelo de efectos fijos (FE) y un modelo de efectos aleatorios (RE). \\
+
+\textbf{Respuesta:} 
+Es importante dar un adecuado tratamiento a los datos cuando estamos trabajando con datos de panel. Sobre todo cuando el análisis es de Diferencias en Diferencias, la convención es que los errores estándar vayan agrupados a nivel individual. 
+
+\begin{enumerate} 
+\item[a)] Modelos \textit{one-way-error}: modelos de efecto fijo individual (donde individuo es el ``nivel'' al que se encuentra el panel). Generalmente decimos que el error tiene forma $$ u_{i,t} = \mu_i + \nu_{i,t}$$ donde $\nu_{i,t} \sim_{iid} (0,\sigma^2_\nu)$
+
+\item[b)] Modelos \textit{two-way-error}: modelos de efecto fijo individual y efecto temporal. Generalmente asumimos que el error tiene forma: 
+
+$$ u_{i,t} = \mu_i + \lambda_t +  \nu_{i,t}$$ donde $\nu_{i,t} \sim_{iid} (0,\sigma^2_\nu)$
+
+\item[c)] Modelos de efectos fijos: tenemos distintos enfoques
+\begin{ebnumerate}
+\item LSDV (least square dummy variable): genera dummies por individuos, es menos preciso y menos eficiente (pues pierde muchos grados de libertad)
+\item  Within (FWL, demeaning the data) i.e., restar promedios temporales a cada observación tal que este varíe a lo largo de tiempo y no importe cómo varía con respecto al resto, por ello se llama within estimator
+\item First-difference (restar tendencia anterior, sin constante) recordemos que las primeras observaciones no tienen periodo anterior, por lo que usar FD implica perder un periodo de tiempo.
+\end{enumerate}
+
+\item[d)] Modelos de efectos aleatorios: supone efectos individuales no determinísticos con supuesto muy fuerte de los errores ($Corr(\mu_i,\nu{i,t})= 0$). Corrige desventaja de FE que se relaciona a solo poder estimar consistentemente variables que varían en el tiempo. Esto se debe a que para estimar
+
+\begin{enumerate}
+\item MLE; se asume distribución normal para los componentes de los errores
+\item FGLS, en dos etapas
+\end{enumerate}
+
+\end{enumerate}
+
+\item Asumiendo un modelo \textit{one-way-error}, estime la ecuación de salarios asumiendo efectos fijos y aleatorios. Para el modelo de efectos fijos utilice los estimadores LSDV, Within y First-difference; y para el modelo de efectos aleatorios utilice el estimador Between, el de FGLS y MLE. Compare sus resultados. 
+
+\item Realice un test de Hausman para determinar si el modelo correcto es de efectos fijos o aleatorios.
+
+\item En base a su respuesta anterior, asuma ahora un modelo \textit{two-way-error} con efectos temporales fijos y testee si estos son necesarios.
+
+\end{enumerate}
+
+\section{Difference in Difference: Ejercicio Teórico}
+
+Suponga que quiere evaluar el impacto económico que tuvo la Copa América 2015\footnote{Copa en la cual Chile resultó Campeón invicto con la delantera más efectiva, el goleador del campeonato, el mejor arquero del campeonato, 5 jugadores elegidos en el equipo ideal de la copa, etc.} en las ciudades ``sede'' (Antofagasta, Santiago, Viña del Mar, Valparaíso, Rancagua, Temuco y Concepción) sobre algunas variables económicas de interés. Sea $Y$ algún \textit{outcome} como por ejemplo: el consumo en pesos, la tasa de desempleo, el nivel de ventas del sector turismo, etc. durante el mes de junio 2015.\\
+
+Una amiga que no hizo el ramo de Teoría Econométrica II, le sugiere comparar el outcome de junio 2015 con el de junio 2014 y pensar en la diferencia como el impacto de la Copa América. Por otra parte, usted cree que un Diff-in-Diff podría funcionar ya que dispone de información relevante sobre ciudades parecidas a las ciudades ``tratadas'' y que no fueron sedes de la Copa América.  \\
+
+Asumiendo un modelo lineal separable, usted tiene:
+$$Y_{it}=\beta dpost_t+\delta dtreat_i + \gamma dpost_t \times dtreat_i + \varepsilon_{it}$$
+
+\begin{enumerate}
+\item[a)] Escriba formalmente el (o los) supuesto(s) de identificación con los que la estrategia \textit{Before-After}  permite identificar un efecto causal y discuta su plausibilidad.  
+
+\textbf{Respuesta:}
+En este caso nuestro parámetro de interés es $\gamma$ el efecto del tratamiento sobre los tratados.
+\begin{eqnarray*}
+&& E(Y_{it} |dpost_t=1,dtreat_i=1)-E(Y|dpost_t=0,dtreat_i=1) = \\ && (\beta + \delta +\gamma + E(\varepsilon_{it} |dpost_t=1,dtreat_i=1))
+-(\delta + E(\varepsilon_{it} |dpost_t=0,dtreat_i=1))
+\end{eqnarray*}
+Luego, esta estrategia será capaz de identificar el efecto causal $\gamma$ si:
+	\begin{itemize}
+	\item $\beta=0$ i.e., no hay cofounding factors (¿se les ocurre alguno?)
+	\item $E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)=E(\varepsilon_{it} |dpost_t=0,dtreat_i=1)$, i.e., errores balanceados para grupos de tratados, el iluso pensar que el error no varía en el tiempo
+	\end{itemize}
+Es muy poco plausible que se cumplan ambos supuestos, especialmente el primero ya que es difícil creer que lo único que sucedió entre Junio 2014 y Junio 2015 haya sido la Copa América.
+
+\item[b)] Demuestre que $\gamma$ representa a la contraparte poblacional del estimador DD y enuncie los supuestos de identificación. 
+
+\textbf{Respuesta:}
+Sean:
+$$\Delta_1=E(Y_{it}|dpost_t=1,dtreat_i=1)-E(Y_{it}|dpost_t=0,dtreat_i=1)$$
+$$\Delta_0=E(Y_{it}|dpost_t=1,dtreat_i=0)-E(Y_{it}|dpost_t=0,dtreat_i=0)$$
+Luego:
+\begin{eqnarray*}
+\Delta_1-\Delta_0 &=& (\beta +\gamma + E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=1))\\
+&& - (\beta +E(\varepsilon_{it} |dpost_t=1,dtreat_i=0)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=0))\\
+&=& \gamma
+\end{eqnarray*}
+Solo si:
+$$E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=1)=$$ $$E(\varepsilon_{it} |dpost_t=1,dtreat_i=0)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=0)$$
+es decir, si la diferencia Before-After del promedio de no observables es igual para controles y tratados. Esto es que en promedio, los no observables de los tratados y controles cambien de la misma manera (tendencias paralelas). Es un requisito más débil que Before After pues no exige que los errores se mantengan estables, sino que permite que varíen, pero de la misma manera.
+ 
+\item[c)] ¿Qué ocurre si $\epsilon$ tiene una estructura tipo one-way error component model? Refiérase a la identificación y estimación.
+
+\textbf{Respuesta:}
+
+Sea: $\varepsilon_{it}=\alpha_i+\eta_{it}$. Luego:
+\begin{eqnarray*}
+&& (1) E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=1) = \\ && (E(\alpha_i |dtreat_i=1)+E(\eta_{it} |dpost_t=1,dtreat_i=1))
+-(E(\alpha_i |dtreat_i=1)+E(\eta_{it} |dpost_t=0,dtreat_i=1))\\
+&& (2) E(\varepsilon_{it} |dpost_t=1,dtreat_i=0)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=0) = \\ &&  (E(\alpha_i |dtreat_t=0)+E(\eta_{it} |dpost_t=1,dtreat_i=0))
+-(E(\alpha_i |dtreat_t=0)+E(\eta_{it} |dpost_t=0,dtreat_i=0))
+\end{eqnarray*}
+Observamos que los efectos individuales se cancelan y para identificar el efecto causal necesitamos el mismo supuesto de tendencias paralelas pero ahora desde el punto de vista del elemento no observable $\eta_{it}$. La estimación no cambia.
+
+\item[d)] Explique en detalle al menos 2 chequeos de robustez que usted realizaría para convencer al lector de que su investigación que usa Diff-in-Diff es una estrategia válida.
+
+\textbf{Respuesta:}\\
+Los posibles chequeos son:
+	\begin{itemize}
+	\item Hacer un DiD con periodos anteriores: -1,0. Por ejemplo: Junio 2013 vs Junio 2014, esperando que no haya efecto.
+	\item Graficar las tendencias temporales del outcome para tratados y controles esperando observar que sean paralelas.
+	\item Hacer un DiD con grupos de control distintos esperando que el efecto sea robusto al cambio.
+	\item Hacer un DiD con outcomes que no deberían cambiar con la copa américa esperando que no haya ningún efecto.
+	\end{itemize}
+¿Por qué estos nos ayudan a chequear nuestro supuesto de identificación?
+
+\item[e)] La ayudante del curso (fanática del fútbol), que está interesado en conocer el impacto, le dice que los no observables capturados por el término $\varepsilon_{it}$ tienen cierta estructura y le propone 2 formas:
+\begin{equation*}
+(1)\; \varepsilon_{it}=\eta_0+ \eta_1 t \times dtreat_i \quad (2) \; \varepsilon_{it}=\alpha_0+\alpha_1 t + \alpha_2 dtreat_i
+\end{equation*}
+
+Para cada caso encuentre la forma cerrada del estimador DD e interprete el resultado obtenido. Ayuda: asuma que solo se dispone de 2 momentos en el tiempo: $t=\{0,1\}$ donde $t=1$ es el período ``after''. 
+
+\textbf{Respuesta:}\\
+Para el primer caso tenemos:
+\begin{eqnarray*}
+E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=1) &=& (\eta_0+\eta_1)-(\eta_0)\\
+&=& \eta_1 \\
+E(\varepsilon_{it} |dpost_t=1,dtreat_i=0)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=0) &=& (\eta_0)-(\eta_0)\\
+&=& 0 
+\end{eqnarray*}
+de modo que el estimador DD identifica: $\Delta_1-\Delta_0=\gamma+\eta_1$; es decir que no logra capturar el efecto causal de interés.
+
+Para el segundo caso tenemos:
+\begin{eqnarray*}
+E(\varepsilon_{it} |dpost_t=1,dtreat_i=1)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=1) &=& (\alpha_0+\alpha_1+\alpha_2)-(\alpha_0+\alpha_2)\\
+&=& \alpha_1 \\
+E(\varepsilon_{it} |dpost_t=1,dtreat_i=0)-E(\varepsilon_{it} |dpost_t=0,dtreat_i=0) &=& (\alpha_0+\alpha_1)-(\alpha_0)\\
+&=& \alpha_1
+\end{eqnarray*}
+y en este caso el estimador DD si identifica: $\Delta_1-\Delta_0=\gamma$; el efecto causal de interés.
+
+\item[f)] Suponga Ud. ahora tiene datos de panel con $T>2$. ¿Cómo implementaría la estrategia DD para estimar $\gamma$? Refiérase explícitamente a las variables que incluiría en su modelo como al tratamiento de los errores estándar, etc.
+
+\textbf{Respuesta:}\\
+Para estimar $\gamma$ podríamos simplemente usar el estimador de primeras diferencias pero como alternativa podríamos utilizar más de 2 periodos utilizando efectos fijos individuales. En el último caso es recomendable utilizar \textit{clustered standard errors} para considerar la correlación intra-individual. 
+
+\item[g)] Por último, un colega le sugiere incorporar la variable dependiente rezagada como regresor. ¿Qué problema de identificación puede generarse en un one-way error component model? ¿Y si existe autocorrelación serial de los errores?
+
+\textbf{Respuesta:}\\
+Con efectos individuales, la inclusión del outcome rezagado hace que este sea un regresor endógeno. Si además hay autocorrelación serial en el shock idiosincrático, entonces habrá doble fuente de endogeneidad en el outcome rezagado.
+\end{enumerate}
+
+
+\end{document}
+
