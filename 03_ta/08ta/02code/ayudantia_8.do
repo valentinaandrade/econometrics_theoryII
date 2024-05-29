@@ -11,7 +11,7 @@ eststo clear
 * 0. set path and locals
 * ---------------------------------------------------
 
-if c(username)=="valentinaandrade" global github"/Users/valentinaandrade/Documents/GitHub/teaching/econometrics_theoryII/03_ta/07ta"
+if c(username)=="valentinaandrade" global github"/Users/valentinaandrade/Documents/GitHub/teaching/econometrics_theoryII/03_ta/08ta"
 
 global src 	    "$github/01input/src"
 global tmp  	"$github/01input/tmp"
