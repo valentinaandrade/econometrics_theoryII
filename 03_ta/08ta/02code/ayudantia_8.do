@@ -1,36 +1,29 @@
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-//	   			       			 Ayudantía 7
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+* -------------------------------------------------
+* AUTHOR: Valentina Andrade
+* CREATION: May - 2024
+* ACTION: TA 8 - Problem 2
+* ----------------------------------------------
 
-// -----------------------------------------------------------------------------
-// Descripción Archivo
-// -----------------------------------------------------------------------------
-	// Proyecto: T. Econometrica II
-	// Creación: Jun 2, 2022
-	// Autor: Constanza Muñoz
+set more off 
+clear all
+eststo clear
+* ---------------------------------------------------
+* 0. set path and locals
+* ---------------------------------------------------
+
+if c(username)=="valentinaandrade" global github"/Users/valentinaandrade/Documents/GitHub/teaching/econometrics_theoryII/03_ta/07ta"
+
+global src 	    "$github/01input/src"
+global tmp  	"$github/01input/tmp"
+global output   "$github/03output"
+
+* ------------------------------------------------------
+**# 1. use data
+* -------------------------------------------------------
+
+use "$src/DS2004.dta", clear
 	
-// -----------------------------------------------------------------------------
-// Ajustes
-// -----------------------------------------------------------------------------
-	set scheme plotplain 
-
-// Directorio
-
-	if "`c(username)'" == "macos" {
-		global dbox "/Users/macos/Dropbox (Personal)/TEII/Ayudantía 7"
-		global git "/Users/macos/Documents/GitHub/TEII/Ayudantía 7"
-
-	}	
-	
-// -----------------------------------------------------------------------------
-// I .- Cargar la base
-// -----------------------------------------------------------------------------
-
-	use "$dbox/DS2004.dta", clear
-	
-	// Miremos la data
+// Miremos la data
 	describe
 	sum
 	unique block
